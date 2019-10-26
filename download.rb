@@ -31,8 +31,13 @@ end
 
 # Download the pictures
 Dir.chdir 'download' do
-  picture_id_list.each do |id|
+  picture_id_list.each.with_index(1) do |id, idx|
     mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/photos/#{id}/img/p").save("#{id}.png")
     sleep 0.1
+    system "clear"
+    puts  "progress: #{idx} / #{picture_id_list.size}"
   end
 end
+
+system "clear"
+puts  "🎉 Finish"
