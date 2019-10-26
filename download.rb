@@ -33,5 +33,6 @@ end
 Dir.chdir 'download' do
   picture_id_list.each do |id|
     mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/photos/#{id}/img/p").save("#{id}.png")
+    sleep 0.1
   end
 end
