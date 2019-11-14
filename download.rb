@@ -22,7 +22,7 @@ offset = 0
 bulk_size = 1000
 while offset < 2000
   body = JSON.parse(mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/ajax/photos?f=#{offset}&n=#{bulk_size}&s=defaultSort").body)
-  body.each{|e| picture_list << {id: e['id'], name: e['date_taken']}}
+  body.each{|e| picture_list << {id: e['id'], name: e['date_taken'], caption: e['caption']}}
   offset += bulk_size
   puts offset
   offset = 1000000000000 if body.size == 0
@@ -32,9 +32,10 @@ end
 # Download the pictures
 Dir.chdir 'download' do
   picture_list.each.with_index(1) do |pic, idx|
-    mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/photos/#{pic[:id]}/img/p").save("#{pic[:name]}.png")
+    file_name = pic[:caption].empty? ? "#{pic[:name]}.png" : "#{pic[:name]}_#{pic[:caption]}.png"
+    mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/photos/#{pic[:id]}/img/p").save("#{file_name}")
     time = Time.new(pic[:name][0,4],pic[:name][4,2],pic[:name][6,2],pic[:name][8,2],pic[:name][10,2],pic[:name][12,2])
-    File.utime(time, time, "#{pic[:name]}.png")
+    File.utime(time, time, "#{file_name}")
     sleep 0.1
     system "clear"
     puts  "progress: #{idx} / #{picture_list.size}"
