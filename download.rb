@@ -33,6 +33,9 @@ end
 Dir.chdir 'download' do
   picture_list.each.with_index(1) do |pic, idx|
     file_name = pic[:caption].empty? ? "#{pic[:name]}.png" : "#{pic[:name]}_#{pic[:caption]}.png"
+    if file_name.length > 250
+      file_name = file_name[0..240] + ".png"
+    end
     mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/photos/#{pic[:id]}/img/p").save("#{file_name}")
     time = Time.new(pic[:name][0,4],pic[:name][4,2],pic[:name][6,2],pic[:name][8,2],pic[:name][10,2],pic[:name][12,2])
     File.utime(time, time, "#{file_name}")
