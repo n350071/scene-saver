@@ -29,6 +29,9 @@ while offset < 2000
   sleep 1
 end
 
+# 10世代ほど覚えておく
+file_names = [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
+
 # Download the pictures
 Dir.chdir 'download' do
   picture_list.each.with_index(1) do |pic, idx|
@@ -36,10 +39,22 @@ Dir.chdir 'download' do
     if file_name.length > 250
       file_name = file_name[0..240] + ".png"
     end
+
+    # 同一ファイル名になってしまうときの対策（適当）
+    if file_names.include?(file_name)
+      file_name = file_name[0..-5] + '_' + (1..10000).to_a.sample.to_s + ".png"
+    end
+
     mechanize.get("https://a.scn.jp/priv/#{ALBUM_URL}/photos/#{pic[:id]}/img/p").save("#{file_name}")
+
+    # ファイル名の記憶の世代交代
+    file_names.shift
+    file_names.push(file_name)
+
     time = Time.new(pic[:name][0,4],pic[:name][4,2],pic[:name][6,2],pic[:name][8,2],pic[:name][10,2],pic[:name][12,2])
+
     File.utime(time, time, "#{file_name}")
-    sleep 0.1
+    sleep 0.05
     system "clear"
     puts  "progress: #{idx} / #{picture_list.size}"
   end
