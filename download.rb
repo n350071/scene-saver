@@ -36,8 +36,8 @@ file_names = [nil, nil, nil, nil, nil, nil, nil, nil, nil, nil]
 Dir.chdir 'download' do
   picture_list.each.with_index(1) do |pic, idx|
     file_name = pic[:caption].empty? ? "#{pic[:name]}.png" : "#{pic[:name]}_#{pic[:caption]}.png"
-    if file_name.length > 250
-      file_name = file_name[0..240] + ".png"
+    if file_name.length > 220
+      file_name = file_name[0..220] + ".png"
     end
 
     # 同一ファイル名になってしまうときの対策（適当）
