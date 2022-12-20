@@ -1,6 +1,7 @@
 require 'mechanize'
 require 'pry'
 require 'pry-byebug'
+require "json"
 
 # Read the .env file and set constants
 File.foreach('.env') do |line|
